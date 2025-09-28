@@ -271,13 +271,31 @@ state emb fit --conf ${CONFIG}
 
 To run inference with a trained State checkpoint, e.g., the State trained to 16 epochs:
 
+```
+cd /mnt/models
+git clone https://huggingface.co/arcinstitute/SE-600M
+
+
+```
+then go to https://plus.figshare.com/articles/dataset/_Mapping_information-rich_genotype-phenotype_landscapes_with_genome-scale_Perturb-seq_Replogle_et_al_2022_processed_Perturb-seq_datasets/20029387 download rpe1_raw_singlecell_01.h5ad (i could npot get the fdirect downloadable link) run
+```
+cd /mnt/datasets/replogle
+mv ~/Downloads/rpe1_raw_singlecell_01.h5ad .
+mkdir /mnt/models/vci_pretrain
+```
+Then run
 ```bash
 state emb transform \
-  --model-folder /large_storage/ctc/userspace/aadduri/SE-600M \
-  --checkpoint /large_storage/ctc/userspace/aadduri/SE-600M/se600m_epoch15.ckpt \
-  --input /large_storage/ctc/datasets/replogle/rpe1_raw_singlecell_01.h5ad \
-  --output /home/aadduri/vci_pretrain/test_output.h5ad
+  --model-folder /mnt/models/SE-600M \
+  --checkpoint /mnt/models/SE-600M/se600m_epoch16.ckpt \
+  --config /mnt/models/SE-600M/config.yaml \
+  --input /mnt/datasets/replogle/rpe1_raw_singlecell_01.h5ad \
+  --output /mnt/models/vci_pretrain/test_output.h5ad
 ```
+Also register with your github and create an account on https://lamin.ai/create-account
+Then go https://lamin.ai/laminlabs/arc-virtual-cell-atlas/transform/AYeSCbcb1k4Y0001?showAll=true
+and search for 2025-02-25/h5ad/Gene/Homo_sapiens/SRX26170541.h5ad  download it from https://lamin.ai/laminlabs/arc-virtual-cell-atlas/artifact/8N48dFylyRWKLhAr0000 
+You can find the lin kin Get dropdown under hd5 link in this case https://storage.googleapis.com/arc-scbasecount/2025-02-25/h5ad/Gene/Homo_sapiens/SRX26170541.h5ad and save it in /mnt/datasets/Gene/Homo_sapiens
 
 Notes on the h5ad file format:
  - CSR matrix format is required
@@ -301,10 +319,9 @@ uv sync --extra vectordb
 
 ```bash
 state emb transform \
-  --model-folder /large_storage/ctc/userspace/aadduri/SE-600M \
-  --input /large_storage/ctc/public/scBasecamp/GeneFull_Ex50pAS/GeneFull_Ex50pAS/Homo_sapiens/SRX27532045.h5ad \
-  --lancedb tmp/state_embeddings.lancedb \
-  --gene-column gene_symbols
+  --model-folder /mnt/models/SE-600M \
+  --input /mnt/datasets/Gene/Homo_sapiens/SRX26170541.h5ad \
+  --lancedb tmp/state_embeddings.lancedb
 ```
 
 Running this command multiple times with the same lancedb appends the new data to the provided database.
@@ -315,10 +332,9 @@ Obtain the embeddings:
 
 ```bash
 state emb transform \
-  --model-folder /large_storage/ctc/userspace/aadduri/SE-600M \
-  --input /large_storage/ctc/public/scBasecamp/GeneFull_Ex50pAS/GeneFull_Ex50pAS/Homo_sapiens/SRX27532046.h5ad \
-  --output tmp/SRX27532046.h5ad \
-  --gene-column gene_symbols
+  --model-folder /mnt/models/SE-600M \
+  --input /mnt/datasets/Gene/Homo_sapiens/SRX26170542.h5ad \
+  --output tmp/SRX26170542.h5ad \
 ```
 
 Query the database with the embeddings:
@@ -326,7 +342,7 @@ Query the database with the embeddings:
 ```bash
 state emb query \
   --lancedb tmp/state_embeddings.lancedb \
-  --input tmp/SRX27532046.h5ad \
+  --input tmp/SRX26170542.h5ad \
   --output tmp/similar_cells.csv \
   --k 3
 
@@ -351,9 +367,9 @@ Example run of `state emb transform`:
 ```bash
 singularity run --nv -B /large_storage:/large_storage \
   state.sif emb transform \
-    --model-folder /large_storage/ctc/userspace/aadduri/SE-600M \
-    --checkpoint /large_storage/ctc/userspace/aadduri/SE-600M/se600m_epoch15.ckpt \
-    --input /large_storage/ctc/datasets/replogle/rpe1_raw_singlecell_01.h5ad \
+    --model-folder /mnt/models/SE-600M \
+    --checkpoint /mnt/models/SE-600M/se600m_epoch15.ckpt \
+    --input /mnt/datasets/replogle/rpe1_raw_singlecell_01.h5ad \
     --output test_output.h5ad
 ```
 

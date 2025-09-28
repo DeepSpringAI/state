@@ -330,7 +330,7 @@ def run_tx_predict(args: ap.ArgumentParser):
     if final_X_hvg is not None:
         if len(gene_names) != final_pert_cell_counts_preds.shape[1]:
             gene_names = np.load(
-                "/large_storage/ctc/userspace/aadduri/datasets/tahoe_19k_to_2k_names.npy", allow_pickle=True
+                "/large_storage/ctc/userspace/agent/datasets/tahoe_19k_to_2k_names.npy", allow_pickle=True
             )
             var = pd.DataFrame({"gene_names": gene_names})
 
@@ -346,7 +346,7 @@ def run_tx_predict(args: ap.ArgumentParser):
     else:
         # if len(gene_names) != final_preds.shape[1]:
         #     gene_names = np.load(
-        #         "/large_storage/ctc/userspace/aadduri/datasets/tahoe_19k_to_2k_names.npy", allow_pickle=True
+        #         "/large_storage/ctc/userspace/agent/datasets/tahoe_19k_to_2k_names.npy", allow_pickle=True
         #     )
         #     var = pd.DataFrame({"gene_names": gene_names})
 

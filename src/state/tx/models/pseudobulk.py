@@ -121,21 +121,21 @@ class PseudobulkPerturbationModel(PerturbationModel):
                 # hvg's but for which dataset?
                 if "DMSO_TF" in control_pert:
                     gene_names = np.load(
-                        "/large_storage/ctc/userspace/aadduri/datasets/tahoe_19k_to_2k_names.npy", allow_pickle=True
+                        "/large_storage/ctc/userspace/agent/datasets/tahoe_19k_to_2k_names.npy", allow_pickle=True
                     )
                 elif "non-targeting" in control_pert:
-                    temp = ad.read_h5ad("/large_storage/ctc/userspace/aadduri/datasets/hvg/replogle/jurkat.h5")
+                    temp = ad.read_h5ad("/large_storage/ctc/userspace/agent/datasets/hvg/replogle/jurkat.h5")
                     gene_names = temp.var.index.values
             else:
                 assert output_space == "all"
                 if "DMSO_TF" in control_pert:
                     gene_names = np.load(
-                        "/large_storage/ctc/userspace/aadduri/datasets/tahoe_19k_names.npy", allow_pickle=True
+                        "/large_storage/ctc/userspace/agent/datasets/tahoe_19k_names.npy", allow_pickle=True
                     )
                 elif "non-targeting" in control_pert:
                     # temp = ad.read_h5ad('/scratch/ctc/ML/vci/paper_replogle/jurkat.h5')
                     # gene_names = temp.var.index.values
-                    temp = ad.read_h5ad("/large_storage/ctc/userspace/aadduri/cross_dataset/replogle/jurkat.h5")
+                    temp = ad.read_h5ad("/large_storage/ctc/userspace/agent/cross_dataset/replogle/jurkat.h5")
                     gene_names = temp.var.index.values
 
             self.gene_decoder = FinetuneVCICountsDecoder(

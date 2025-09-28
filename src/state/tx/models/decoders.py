@@ -13,10 +13,10 @@ class FinetuneVCICountsDecoder(nn.Module):
     def __init__(
         self,
         genes,
-        # model_loc="/large_storage/ctc/userspace/aadduri/vci/checkpoint/rda_tabular_counts_2048_new/step=950000.ckpt",
-        # config="/large_storage/ctc/userspace/aadduri/vci/checkpoint/rda_tabular_counts_2048_new/tahoe_config.yaml",
-        model_loc="/home/aadduri/vci_pretrain/vci_1.4.2.ckpt",
-        config="/large_storage/ctc/userspace/aadduri/vci/checkpoint/large_1e-4_rda_tabular_counts_2048/crossds_config.yaml",
+        # model_loc="/large_storage/ctc/userspace/agent/vci/checkpoint/rda_tabular_counts_2048_new/step=950000.ckpt",
+        # config="/large_storage/ctc/userspace/agent/vci/checkpoint/rda_tabular_counts_2048_new/tahoe_config.yaml",
+        model_loc="/mnt/models/vci_pretrain/vci_1.4.2.ckpt",
+        config="/large_storage/ctc/userspace/agent/vci/checkpoint/large_1e-4_rda_tabular_counts_2048/crossds_config.yaml",
         read_depth=1200,
         latent_dim=1024,  # dimension of pretrained vci model
         hidden_dims=[512, 512, 512],  # hidden dimensions of the decoder

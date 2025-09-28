@@ -267,3 +267,285 @@ make preprocess-infer ADATA=/path/to/real_data.h5ad OUTPUT=/path/to/control_temp
 The Makefile now provides a complete workflow for training, inference, and data preprocessing, following all the recommendations from the README.md while maintaining flexibility for different use cases.
 
 ___
+I'll help you understand the STATE model structure and analyze the difficulty of integrating generative models like diffusion or GPT. Let me first explore the state repository to understand its architecture and implementation.
+
+
+[5 tools called]
+
+Now let me examine the core model implementations to understand the architecture better:
+
+
+[4 tools called]
+
+Now let me examine the transformer backbone and set encoding mechanisms:
+
+
+[4 tools called]
+
+Now let me examine the configuration files to understand the model architectures better:
+
+
+[4 tools called]
+
+Now let me complete the analysis by examining the progress documentation to understand the current state of the project:
+
+
+[2 tools called]
+
+Based on my comprehensive analysis of the STATE model architecture, I can now provide you with a detailed assessment of how difficult it would be to integrate generative models like diffusion or GPT.
+
+## STATE Model Architecture Analysis
+
+### **Current Architecture Overview**
+
+The STATE model consists of two main components:
+
+1. **State Embedding (SE) Model**: 
+   - Uses a transformer encoder with Flash attention
+   - Learns representations of cells from large observational datasets
+   - Outputs normalized embeddings via CLS token
+   - 600M parameters (SE-600M)
+
+2. **State Transition (ST) Model**:
+   - Uses Llama/GPT2 transformer backbone with bidirectional attention
+   - Operates over sets of cells (cell_sentence_len = 128-512)
+   - Predicts perturbed cell transcriptomes given input cell + perturbation
+   - Multiple sizes: small (672 dim), default (696 dim), large (1488 dim)
+
+### **Set Encoding Mechanism**
+
+The key innovation is how STATE handles **set encoding**:
+
+```python
+# Cells are treated as sequences/sentences
+cell_sentence_len = 512  # Number of cells per set
+seq_input = combined_input  # [B, S, hidden_dim] where S = cell_sentence_len
+
+# Bidirectional attention allows cells to attend to each other
+transformer_output = self.transformer_backbone(inputs_embeds=seq_input)
+```
+
+**Key Features:**
+- **Bidirectional attention**: Cells can attend to each other (not causal)
+- **Set-to-set mapping**: Learns relationships between cell sets
+- **Distributional losses**: Uses optimal transport (Sinkhorn, Energy) for set comparisons
+- **Residual prediction**: Predicts changes from control to perturbed state
+
+## **Difficulty Assessment: Integrating Generative Models**
+
+### **🟢 EASY Integration Points**
+
+#### **1. GPT Integration (Already Partially Done)**
+- **Current**: Uses GPT2/Llama backbones with bidirectional attention
+- **Integration**: Already has transformer architecture that could be extended
+- **Difficulty**: **LOW** - The infrastructure is already there
+
+```python
+# Current transformer backbone
+transformer_backbone_key: "GPT2"  # or "llama"
+transformer_backbone_kwargs:
+    n_layer: 8
+    n_head: 8
+    hidden_size: 696
+```
+
+#### **2. Conditional Generation**
+- **Current**: Has perturbation conditioning via `pert_encoder`
+- **Integration**: Could extend to text conditioning
+- **Difficulty**: **LOW-MEDIUM** - Need to add text tokenization
+
+### **🟡 MEDIUM Integration Points**
+
+#### **3. Diffusion Model Integration**
+- **Challenge**: Current model uses deterministic mapping
+- **Solution**: Replace final projection with diffusion process
+- **Architecture Changes Needed**:
+  ```python
+  # Current: Direct projection
+  out_pred = self.project_out(res_pred)
+  
+  # Diffusion: Replace with noise prediction
+  noise_pred = self.diffusion_model(res_pred, timestep, noise)
+  ```
+
+- **Difficulty**: **MEDIUM** - Requires architectural changes but set encoding is compatible
+
+#### **4. Autoregressive Generation**
+- **Challenge**: Current model processes entire cell sets at once
+- **Solution**: Could generate cells one at a time
+- **Difficulty**: **MEDIUM** - Need to modify the set encoding approach
+
+### **🔴 HARD Integration Points**
+
+#### **5. Full Diffusion Integration with Set Encoding**
+- **Challenge**: Diffusion models typically work on individual samples, not sets
+- **Solution**: Need to design set-aware diffusion process
+- **Difficulty**: **HIGH** - Requires novel research
+
+#### **6. Multi-Modal Generation**
+- **Challenge**: Current model is single-modal (gene expression)
+- **Solution**: Need to extend to multiple data types
+- **Difficulty**: **HIGH** - Requires complete architectural overhaul
+
+## **Recommended Integration Strategy**
+
+### **Phase 1: Easy Wins (1-2 months)**
+1. **Extend existing GPT backbone** with larger models (GPT-3.5, GPT-4)
+2. **Add text conditioning** for perturbation descriptions
+3. **Implement confidence tokens** (already partially implemented)
+
+### **Phase 2: Medium Complexity (3-6 months)**
+1. **Replace final projection with diffusion process**
+2. **Implement autoregressive cell generation**
+3. **Add noise scheduling and denoising steps**
+
+### **Phase 3: Advanced Integration (6+ months)**
+1. **Develop set-aware diffusion processes**
+2. **Multi-modal generation capabilities**
+3. **Advanced conditioning mechanisms**
+
+## **Key Technical Considerations**
+
+### **Strengths for Integration:**
+- ✅ **Modular architecture** - easy to swap components
+- ✅ **Bidirectional attention** - already supports set relationships
+- ✅ **Distributional losses** - compatible with generative objectives
+- ✅ **Existing transformer infrastructure**
+
+### **Challenges:**
+- **Set encoding complexity** - diffusion typically works on individual samples
+- **Biological constraints** - need to maintain biological plausibility
+- **Computational cost** - generative models are more expensive
+- **Evaluation metrics** - need new ways to assess generative quality
+
+## **Conclusion**
+
+**Overall Difficulty: MEDIUM** 
+
+The STATE architecture is well-positioned for generative model integration due to its modular design and existing transformer infrastructure. The main challenges are:
+
+1. **Set encoding compatibility** with generative processes
+2. **Biological plausibility** constraints
+3. **Computational scaling** requirements
+
+However, the existing bidirectional attention mechanism and distributional loss functions provide a solid foundation for integrating diffusion and GPT models, making this a feasible but non-trivial undertaking.
+
+___
+Perfect! Let's use the checkpoint at epoch 16 and the config file from the same directory for consistency. Here's the updated command:
+
+```bash
+state emb transform \
+  --model-folder /mnt/models/SE-600M \
+  --checkpoint /mnt/models/SE-600M/se600m_epoch16.ckpt \
+  --config /mnt/models/SE-600M/config.yaml \
+  --input /mnt/datasets/replogle/rpe1_raw_singlecell_01.h5ad \
+  --output /mnt/models/vci_pretrain/test_output.h5ad
+```
+
+This approach is much better because:
+
+1. **Consistency**: Using the config file from the same directory as the model ensures all paths and settings are properly aligned
+2. **Latest checkpoint**: Using `se600m_epoch16.ckpt` instead of `se600m_epoch15.ckpt` gives you a more trained model (one additional epoch)
+3. **Proper configuration**: The config file in the model directory should have all the correct paths and settings that were used during training
+
+This should resolve the "No config found in checkpoint" error since you're now explicitly providing the config file that was used during training.
+
+___
+I can see from the terminal output that you're getting an error when trying to use the `--gene-column` argument with the `state emb transform` command. Let me examine the state tool to understand what arguments are actually supported.
+
+
+[1 tool called]
+
+Now let me check the actual command line interface to see what arguments are supported for the `emb transform` command:
+
+
+[1 tool called]
+
+Let me try a different approach to check the help:
+
+
+[2 tools called]
+
+Let me check if there's a way to run the state command or look at the source code to understand the available arguments:
+
+
+[1 tool called]
+
+Perfect! Now I can see the issue. Looking at the `add_arguments_transform` function in `/home/agent/workspace/state/src/state/_cli/_emb/_transform.py`, I can see that there is **no `--gene-column` argument** defined in the command line interface.
+
+The available arguments for `state emb transform` are:
+- `--model-folder` (required)
+- `--checkpoint` (optional)
+- `--config` (optional)
+- `--input` (required)
+- `--output` (optional)
+- `--embed-key` (default: "X_state")
+- `--protein-embeddings` (optional)
+- `--lancedb` (optional)
+- `--lancedb-update` (optional)
+- `--lancedb-batch-size` (optional)
+- `--batch-size` (optional)
+
+However, I notice that in the README.md file (lines 321-325), there's an example that shows `--gene-column gene_symbols` being used:
+
+```bash
+state emb transform \
+  --model-folder /mnt/models/SE-600M \
+  --input /mnt/datasets/Gene/Homo_sapiens/SRX26170541.h5ad \
+  --lancedb tmp/state_embeddings.lancedb \
+  --gene-column gene_symbols
+```
+
+This suggests that either:
+1. The README is outdated and the `--gene-column` argument was removed
+2. The argument exists but isn't properly defined in the CLI
+3. There's a version mismatch between the documentation and the actual code
+
+Let me check if there are any recent changes or if this argument should exist:
+
+
+[1 tool called]
+
+Interesting! The `--gene-column` argument exists in the `_eval.py` file but not in the `_transform.py` file. Let me check if there's a more recent version or if this is a missing feature:
+
+
+[1 tool called]
+
+Now I can see the issue clearly! The `--gene-column` argument exists in the `eval` command but is missing from the `transform` command. This is a bug in the codebase - the README shows examples using `--gene-column` with the `transform` command, but the actual CLI implementation doesn't support this argument.
+
+Let me check if there are any recent commits or issues related to this:
+
+
+[1 tool called]
+
+Now I can see the issue! Looking at the `_auto_detect_gene_column` method in the `Inference` class, I can see that the system has auto-detection logic for gene columns, but the `transform` command doesn't expose a `--gene-column` argument like the `eval` command does.
+
+The problem is that the `transform` command is missing the `--gene-column` argument that's shown in the README examples. This is a bug in the codebase.
+
+## Solution
+
+The issue is that the `--gene-column` argument is missing from the `state emb transform` command, even though it's documented in the README and exists in the `eval` command. 
+
+Here are your options:
+
+1. **Remove the `--gene-column` argument from your command** - The system will auto-detect the gene column:
+   ```bash
+   state emb transform \
+     --model-folder /mnt/models/SE-600M \
+     --input /mnt/datasets/Gene/Homo_sapiens/SRX26170541.h5ad \
+     --lancedb tmp/state_embeddings.lancedb
+   ```
+
+2. **Use the `eval` command instead** if you need the `--gene-column` functionality:
+   ```bash
+   state emb eval \
+     --checkpoint /mnt/models/SE-600M/se600m_epoch16.ckpt \
+     --adata /mnt/datasets/Gene/Homo_sapiens/SRX26170541.h5ad \
+     --gene-column gene_symbols
+   ```
+
+3. **Fix the codebase** by adding the missing `--gene-column` argument to the `transform` command (this would require modifying the source code).
+
+The auto-detection should work for most cases, so I'd recommend trying option 1 first. The system will automatically detect the best gene column based on overlap with protein embeddings.
+
+___
