@@ -12,3 +12,16 @@ notebooks/
 *.slurm
 temp
 wandb/
+*.h5ad
+*.vcc
+*.ckpt
+*.csv
+*.h5
+*.pkl
+*.pt
+*.torch
+*zip
+trial.ipynb
+train_script.py
+DETAILED_EVALUATION_ANALYSIS.md
+EVALUATION_ANALYSIS.md
