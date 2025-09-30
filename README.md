@@ -65,37 +65,35 @@ To start an experiment, write a TOML file (see `examples/zeroshot.toml` or
 `examples/fewshot.toml` to start). The TOML file specifies the dataset paths
 (containing h5ad files) as well as the machine learning task.
 
-Training an ST example below.
-
-```bash
-state tx train \
-data.kwargs.toml_config_path="examples/fewshot.toml" \
-data.kwargs.embed_key=X_hvg \
-data.kwargs.num_workers=12 \
-data.kwargs.batch_col=batch_var \
-data.kwargs.pert_col=target_gene \
-data.kwargs.cell_type_key=cell_type \
-data.kwargs.control_pert=TARGET1 \
-training.max_steps=40000 \
-training.val_freq=100 \
-training.ckpt_every_n_steps=100 \
-training.batch_size=8 \
-training.lr=1e-4 \
-model.kwargs.cell_set_len=64 \
-model.kwargs.hidden_dim=328 \
-model=pertsets \
-wandb.tags="[test]" \
-output_dir="$HOME/state" \
-name="test"
+To train with a mixed experiment (including both zeroshot and fewshot)
+```
+state tx train \                                                       
+  data.kwargs.toml_config_path="examples/mixed.toml" \
+  data.kwargs.embed_key=X_hvg \
+  data.kwargs.num_workers=32 \
+  data.kwargs.batch_col=batch_var \
+  data.kwargs.pert_col=target_gene \
+  data.kwargs.cell_type_key=cell_type \
+  data.kwargs.control_pert=TARGET1 \
+  training.max_steps=10000 \
+  training.batch_size=32 \
+  training.lr=1e-4 \
+  model=state \
+  output_dir="./mixed_for_competition" \
+  name="unified_model_mixed_for_the_meeting"
 ```
 
 The cell lines and perturbations specified in the TOML should match the values appearing in the
 `data.kwargs.cell_type_key` and `data.kwargs.pert_col` used above. To evaluate STATE on the specified task,
 you can use the `tx predict` command:
 
-```bash
-state tx predict --output_dir $HOME/state/test/ --checkpoint final.ckpt
+
 ```
+ state tx predict \                                              
+  --output-dir ./mixed_for_competition/unified_model_mixed_for_the_meeting/ \
+  --checkpoint final.ckpt
+```
+
 
 It will look in the `output_dir` above, for a `checkpoints` folder.
 
@@ -104,10 +102,12 @@ in the TOML file:
 
 
 ```bash
-state tx infer --output $HOME/state/test/ --output_dir /path/to/model/ --checkpoint /path/to/model/final.ckpt --adata /path/to/anndata/processed.h5 --pert_col gene --embed_key X_hvg
+state tx infer \                                                                                          
+  --model-dir ./mixed_for_competition/unified_model_mixed_for_the_meeting/ \
+  --adata competition_support_set/competition_val_template.h5ad \
+  --output competition/prediction_new.h5ad \
+  --pert-col target_gene
 ```
-
-Here, `/path/to/model/` is the folder downloaded from [HuggingFace](https://huggingface.co/arcinstitute).
 
 ### Data Preprocessing
 
@@ -142,6 +142,18 @@ state tx preprocess_infer \
   --pert_col "treatment" \
   --seed 42
 ```
+
+
+#### converting to the competition template
+
+run h5da_convertor.py to get the **.vcc** file:
+
+```
+python h5da_convertor.py
+
+```
+
+
 
 This command replaces all perturbed cells with control cell expression while preserving perturbation annotations. The resulting dataset serves as a baseline where `state_transition(control_template) ≈ original_data`, allowing you to evaluate how well the model reconstructs perturbation effects from control states.
 
