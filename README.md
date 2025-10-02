@@ -30,6 +30,16 @@ export DATASET_PATH='examples'
 
 ```
 
+
+## Running on the server
+
+```
+chmod +x run.sh
+make train
+```
+
+
+
 ## State Transition Model (ST)
 
 To train with a mixed experiment (including both zeroshot and fewshot)
