@@ -38,14 +38,15 @@ train:
 	  name="$(NAME)"
 
 setup:
-	@if command -v uv >/dev/null 2>&1; then \
-	  echo "[INFO] uv detected; syncing environment"; \
-	  uv sync; \
+	@if ! command -v uv >/dev/null 2>&1; then \
+	  echo "[INFO] uv not found, installing via pip"; \
+	  pip install uv; \
 	else \
-	  echo "[INFO] uv not found; creating .venv and installing requirements.txt"; \
-	  if [ ! -d ".venv" ]; then python -m venv .venv; fi; \
-	  . .venv/bin/activate && pip install uv; \
+	  echo "[INFO] uv is already installed"; \
 	fi
+	@echo "[INFO] Installing this repo as a uv tool"
+	uv tool install -e .
+
 
 clean:
 	rm -rf .venv __pycache__ .pytest_cache .ruff_cache

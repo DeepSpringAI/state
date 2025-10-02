@@ -6,7 +6,10 @@ Predicting cellular responses to perturbation across diverse contexts with State
 ## Running on the server
 if you are running on the server, simply follow below:
 
-
+```bash
+git clone --branch experimental_setup git@github.com:DeepSpringAI/state.git
+cd state
+```
 
 ```
 chmod +x run.sh
