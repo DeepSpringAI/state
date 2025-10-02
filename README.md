@@ -33,7 +33,7 @@ export DATASET_PATH='examples'
 ## State Transition Model (ST)
 
 To train with a mixed experiment (including both zeroshot and fewshot)
-
+```
 state tx train \
   data.kwargs.toml_config_path="$(pwd)/examples/mixed.toml" \
   data.kwargs.embed_key=X_hvg \
@@ -48,7 +48,7 @@ state tx train \
   model=state \
   output_dir="./mixed_for_competition" \
   name="unified_model_mixed_for_the_meeting"
-
+```
 The cell lines and perturbations specified in the TOML should match the values appearing in the
 `data.kwargs.cell_type_key` and `data.kwargs.pert_col` used above. To evaluate STATE on the specified task,
 you can use the `tx predict` command:
