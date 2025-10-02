@@ -393,7 +393,7 @@ wandb/
 #### 1. **Prepare Your Environment**
 ```bash
 # Ensure you're in the state directory
-cd /home/jamshid/workspace/state_modelling/state
+cd ${WORKSPACE}/state
 
 # Install dependencies (if not already done)
 uv sync

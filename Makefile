@@ -12,14 +12,17 @@ CELL_TYPE_KEY ?= cell_type
 CONTROL_PERT  ?= TARGET1
 MODEL         ?= state
 
-.PHONY: help train setup clean
+.PHONY: help train setup clean docker-build docker-run docker-train
 .DEFAULT_GOAL := help
 
 help:
 	@echo "Targets:"
-	@echo "  make train    - run training"
-	@echo "  make setup    - prepare environment"
-	@echo "  make clean    - remove local venv and cache"
+	@echo "  make train        - run training"
+	@echo "  make setup        - prepare environment"
+	@echo "  make clean        - remove local venv and cache"
+	@echo "  make docker-build - build Docker image with all dependencies"
+	@echo "  make docker-run   - run Docker container interactively"
+	@echo "  make docker-train - run training in Docker container"
 
 train:
 	./run.sh tx train \
@@ -50,3 +53,22 @@ setup:
 
 clean:
 	rm -rf .venv __pycache__ .pytest_cache .ruff_cache
+
+docker-build:
+	@echo "[INFO] Building Docker image with all dependencies pre-installed"
+	./build-docker.sh
+
+docker-run:
+	@echo "[INFO] Running Docker container interactively"
+	docker run -it --rm --gpus all \
+	  -v $(CURDIR):/workspace \
+	  -w /workspace \
+	  state-ml:latest bash
+
+docker-train:
+	@echo "[INFO] Running training in Docker container"
+	docker run -it --rm --gpus all \
+	  -v $(CURDIR):/workspace \
+	  -w /workspace \
+	  state-ml:latest \
+	  make train CONFIG="$(CONFIG)" OUTPUT="$(OUTPUT)" NAME="$(NAME)"

@@ -1,0 +1,95 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model outputs and data
+mixed_for_competition/
+competition_old/
+*.h5ad
+*.ckpt
+*.pth
+*.pt
+
+# Logs
+*.log
+logs/
+
+# Cache
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Documentation
+docs/
+# Keep README.md as it's required by pyproject.toml
+# *.md
+
+# Test files
+tests/
+test_*
+
+# Backup files
+*.bak
+*.backup
+
+# Large files that shouldn't be in container
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.pdf
+*.zip
+*.tar.gz
+
+# Temporary files
+tmp/
+temp/
+*.tmp

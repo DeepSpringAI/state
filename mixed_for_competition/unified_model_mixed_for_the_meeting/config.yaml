@@ -1,7 +1,7 @@
 data:
   name: PerturbationDataModule
   kwargs:
-    toml_config_path: /home/jamshid/workspace/state_modelling/state/examples/mixed.toml
+    toml_config_path: ./examples/mixed.toml
     embed_key: X_hvg
     output_space: all
     pert_rep: onehot
