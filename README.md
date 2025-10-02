@@ -10,10 +10,13 @@ if you are running on the server, simply follow below:
 git clone --branch experimental_setup git@github.com:DeepSpringAI/state.git
 cd state
 ```
-
+### Installation 
 ```
 chmod +x run.sh
 make setup 
+```
+### training
+```
 make train
 ```
 
