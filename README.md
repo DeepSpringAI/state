@@ -3,6 +3,19 @@
 ## Getting started
 Predicting cellular responses to perturbation across diverse contexts with State
 
+## Running on the server
+if you are running on the server, simply follow below:
+
+
+
+```
+chmod +x run.sh
+make setup 
+make train
+```
+
+
+
 ### Installation
 ### if *uv* is not already installed, use the command below to install it:
 
@@ -31,12 +44,6 @@ export DATASET_PATH='examples'
 ```
 
 
-## Running on the server
-
-```
-chmod +x run.sh
-make train
-```
 
 
 
