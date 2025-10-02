@@ -242,10 +242,23 @@ def run_tx_train(cfg: DictConfig):
     else:
         plugins = []
 
+    # Test CUDA functionality before using GPU
     if torch.cuda.is_available():
-        accelerator = "gpu"
+        try:
+            # Test if CUDA actually works by creating a tensor on GPU
+            test_tensor = torch.tensor([1.0]).cuda()
+            accelerator = "gpu"
+            logger.info("CUDA is available and working, using GPU accelerator")
+        except RuntimeError as e:
+            if "CUDA driver error" in str(e):
+                logger.warning(f"CUDA driver error detected: {e}")
+                logger.warning("Falling back to CPU training")
+                accelerator = "cpu"
+            else:
+                raise e
     else:
         accelerator = "cpu"
+        logger.info("CUDA not available, using CPU accelerator")
 
     # Decide on trainer params
     trainer_kwargs = dict(

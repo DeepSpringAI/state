@@ -12,13 +12,14 @@ CELL_TYPE_KEY ?= cell_type
 CONTROL_PERT  ?= TARGET1
 MODEL         ?= state
 
-.PHONY: help train setup clean docker-build docker-run docker-train
+.PHONY: help train setup setup-cpu clean docker-build docker-run docker-train
 .DEFAULT_GOAL := help
 
 help:
 	@echo "Targets:"
 	@echo "  make train        - run training"
-	@echo "  make setup        - prepare environment"
+	@echo "  make setup        - prepare environment with CUDA support"
+	@echo "  make setup-cpu    - prepare environment with CPU-only PyTorch"
 	@echo "  make clean        - remove local venv and cache"
 	@echo "  make docker-build - build Docker image with all dependencies"
 	@echo "  make docker-run   - run Docker container interactively"
@@ -47,9 +48,26 @@ setup:
 	else \
 	  echo "[INFO] uv is already installed"; \
 	fi
-	@echo "[INFO] Installing this repo as a uv tool"
-	uv tool install -e .
+	@echo "[INFO] Creating virtual environment and installing dependencies"
+	uv venv --clear
+	@echo "[INFO] Installing this repo in development mode"
+	uv pip install -e . --index-strategy unsafe-best-match
+	@echo "[INFO] Installing CUDA-compatible PyTorch"
+	uv pip install torch==2.4.1+cu121 torchvision==0.19.1+cu121 torchaudio==2.4.1+cu121 --index-url https://download.pytorch.org/whl/cu121 --index-strategy unsafe-best-match
 
+setup-cpu:
+	@if ! command -v uv >/dev/null 2>&1; then \
+	  echo "[INFO] uv not found, installing via pip"; \
+	  pip install uv; \
+	else \
+	  echo "[INFO] uv is already installed"; \
+	fi
+	@echo "[INFO] Creating virtual environment and installing dependencies"
+	uv venv --clear
+	@echo "[INFO] Installing this repo in development mode"
+	uv pip install -e . --index-strategy unsafe-best-match
+	@echo "[INFO] Installing CPU-only PyTorch"
+	uv pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match
 
 clean:
 	rm -rf .venv __pycache__ .pytest_cache .ruff_cache
