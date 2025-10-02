@@ -19,7 +19,7 @@ make train
 
 
 
-### Installation
+### Installation (not on the server)
 ### if *uv* is not already installed, use the command below to install it:
 
 ```
