@@ -1,35 +1,50 @@
-
-
 ## Getting started
+
 Predicting cellular responses to perturbation across diverse contexts with State
 
 ## Running on the server
+
 if you are running on the server, simply follow below:
 
 ```bash
 git clone --branch experimental_setup git@github.com:DeepSpringAI/state.git
 cd state
 ```
-### Installation 
+
+### Installation
+
+### downloading the dataset
+
+```
+
+run python data_download.py
+```
+
+```
+
+```
+
+
 ```
 chmod +x run.sh
 make setup 
 ```
+
 ### training
+
 ```
 make train
 ```
 
-
-
 ### Installation (not on the server)
+
 ### if *uv* is not already installed, use the command below to install it:
 
 ```
 pip install uv
 ```
 
-### clone the repo and installing the package 
+### clone the repo and installing the package
 
 ```bash
 git clone --branch experimental_setup git@github.com:DeepSpringAI/state.git
@@ -39,23 +54,21 @@ uv tool install -e .
 
 ## CLI Usage
 
-
-```state --help```
+``state --help``
 
 ## set the dataset path
+
 set the path to the *examples* directory if different:
+
 ```
 export DATASET_PATH='examples'
 
 ```
 
-
-
-
-
 ## State Transition Model (ST)
 
 To train with a mixed experiment (including both zeroshot and fewshot)
+
 ```
 state tx train \
   data.kwargs.toml_config_path="$(pwd)/examples/mixed.toml" \
@@ -72,26 +85,24 @@ state tx train \
   output_dir="./mixed_for_competition" \
   name="unified_model_mixed_for_the_meeting"
 ```
+
 The cell lines and perturbations specified in the TOML should match the values appearing in the
 `data.kwargs.cell_type_key` and `data.kwargs.pert_col` used above. To evaluate STATE on the specified task,
 you can use the `tx predict` command:
 
-
 ```
- state tx predict \                                              
+ state tx predict \                                            
   --output-dir ./mixed_for_competition/unified_model_mixed_for_the_meeting/ \
   --checkpoint final.ckpt
 ```
-
 
 It will look in the `output_dir` above, for a `checkpoints` folder.
 
 If you instead want to use a trained checkpoint for inference (e.g. on data not specified)
 in the TOML file:
 
-
 ```bash
-state tx infer \                                                                                          
+state tx infer \                                                                                        
   --model-dir ./mixed_for_competition/unified_model_mixed_for_the_meeting/ \
   --adata competition_support_set/competition_val_template.h5ad \
   --output competition/prediction_new.h5ad \
@@ -114,8 +125,9 @@ state tx preprocess_train \
 ```
 
 This command:
+
 - Normalizes total counts per cell (`sc.pp.normalize_total`)
-- Applies log1p transformation (`sc.pp.log1p`) 
+- Applies log1p transformation (`sc.pp.log1p`)
 - Identifies highly variable genes (`sc.pp.highly_variable_genes`)
 - Stores the HVG expression matrix in `.obsm['X_hvg']`
 
@@ -132,7 +144,6 @@ state tx preprocess_infer \
   --seed 42
 ```
 
-
 #### converting to the competition template
 
 run h5da_convertor.py to get the **.vcc** file:
@@ -142,8 +153,8 @@ python h5da_convertor.py
 
 ```
 
-
 ## Licenses
+
 State code is [licensed](LICENSE) under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0).
 
 The model weights and output are licensed under the [Arc Research Institute State Model Non-Commercial License](MODEL_LICENSE.md) and subject to the [Arc Research Institute State Model Acceptable Use Policy](MODEL_ACCEPTABLE_USE_POLICY.md).
