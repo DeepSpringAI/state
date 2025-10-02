@@ -5,9 +5,9 @@ import pandas as pd
 import scipy.sparse as sp
 from pathlib import Path
 
-IN_H5AD  = "mixed_for_competition/competition/prediction_new.h5ad"
+IN_H5AD  = "mixed_for_competition/competition/prediction_final.h5ad"
 GENES_CSV = "competition_support_set/gene_names.csv"
-OUT_H5AD = "mixed_for_competition/competition/prediction_sparse_subset.h5ad"
+OUT_H5AD = "mixed_for_competition/competition/prediction_sparse_subset_final.h5ad"
 
 CHUNK = 2000  # tune: smaller if you still hit OOM
 

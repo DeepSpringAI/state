@@ -26,62 +26,44 @@ This package is distributed via [`uv`](https://docs.astral.sh/uv).
 uv tool install arc-state
 ```
 
-### Installation from Source
+### Installation
 
 ```bash
-git clone git@github.com:ArcInstitute/state.git
-cd state
-uv run state
-```
-
-When making fundamental changes to State, install an editable version with the `-e` flag.
-
-```bash
-git clone git@github.com:ArcInstitute/state.git
+git clone --branch experimental_setup git@github.com:DeepSpringAI/state.git
 cd state
 uv tool install -e .
 ```
 
 ## CLI Usage
 
-You can access the CLI help menu with:
 
 ```state --help```
 
-Output:
+## set the dataset path
+set the path to the *examples* directory if different:
 ```
-usage: state [-h] {emb,tx} ...
+export DATASET_PATH='examples'
 
-positional arguments:
-  {emb,tx}
-
-options:
-  -h, --help  show this help message and exit
 ```
 
 ## State Transition Model (ST)
 
-To start an experiment, write a TOML file (see `examples/zeroshot.toml` or
-`examples/fewshot.toml` to start). The TOML file specifies the dataset paths
-(containing h5ad files) as well as the machine learning task.
-
 To train with a mixed experiment (including both zeroshot and fewshot)
-```
-state tx train \                                                       
-  data.kwargs.toml_config_path="examples/mixed.toml" \
+
+state tx train \
+  data.kwargs.toml_config_path="$(pwd)/examples/mixed.toml" \
   data.kwargs.embed_key=X_hvg \
   data.kwargs.num_workers=32 \
   data.kwargs.batch_col=batch_var \
   data.kwargs.pert_col=target_gene \
   data.kwargs.cell_type_key=cell_type \
   data.kwargs.control_pert=TARGET1 \
-  training.max_steps=10000 \
-  training.batch_size=32 \
+  training.max_steps=5000 \
+  training.batch_size=64 \
   training.lr=1e-4 \
   model=state \
   output_dir="./mixed_for_competition" \
   name="unified_model_mixed_for_the_meeting"
-```
 
 The cell lines and perturbations specified in the TOML should match the values appearing in the
 `data.kwargs.cell_type_key` and `data.kwargs.pert_col` used above. To evaluate STATE on the specified task,
