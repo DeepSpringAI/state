@@ -1,0 +1,32 @@
+Experiment #1: Early Stopping (Competition Data)
+=================================================
+
+Date: Thu Oct 16 07:27:45 UTC 2025
+Host: hosseina-generative-ai-0
+GPU: NVIDIA H100 NVL
+
+Configuration:
+- Max steps: 40000
+- Early stopping patience: 5
+- Min delta: 0.001
+- Num workers: 8
+- Batch size: 32
+- Checkpoint every: 20000 steps
+- Data: Competition support set
+- Model: state_sm (small model)
+- Perturbation features: ESM2
+
+Hypothesis:
+- Model is overfitting after optimal point
+- Early stopping will prevent catastrophic forgetting
+- Expected to stop before 40000 steps
+
+Expected Improvement:
+- 10-15% better ranking on leaderboard
+- Better generalization to test set
+- Reduced training time
+
+Files Modified:
+- src/state/tx/callbacks/early_stopping.py (new)
+- src/state/tx/callbacks/__init__.py
+- src/state/_cli/_tx/_train.py

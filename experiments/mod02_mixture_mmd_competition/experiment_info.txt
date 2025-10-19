@@ -1,0 +1,43 @@
+Experiment #2: Mixture-Kernel MMD (Competition Data)
+=====================================================
+
+Date: Thu Oct 16 08:05:16 UTC 2025
+Host: hosseina-generative-ai-2
+GPU: NVIDIA H100 NVL
+
+Configuration:
+- Max steps: 40000
+- Loss function: mixture_mmd
+- Blur scales: [0.01, 0.05, 0.1, 0.5]
+- Num workers: 8
+- Batch size: 32 (matching mod01)
+- Checkpoint every: 20000 steps
+- Data: Competition support set (same as mod01)
+- Model: state_sm (small model)
+- Perturbation features: ESM2
+- Early stopping: false
+
+Hypothesis:
+- Single-scale MMD fails with varying data volumes
+- Multi-scale kernels capture both local and global structure
+- Better handles heterogeneous cell densities
+
+Expected Improvement:
+- 8-12% better ranking on leaderboard
+- More robust to batch size variations
+- Better captures multi-scale perturbation effects
+
+Files Modified:
+- src/state/tx/models/mixture_kernel_mmd.py (new)
+- src/state/tx/models/state_transition.py (loss selection)
+
+Addresses Issue:
+- "distance metric work when data volume is increased"
+
+Data Configuration (matches mod01_early_stopping_competition):
+- toml_config_path: competition_support_set/starter.toml
+- batch_col: batch_var
+- pert_col: target_gene
+- cell_type_key: cell_type
+- control_pert: non-targeting
+- perturbation_features_file: competition_support_set/ESM2_pert_features.pt
