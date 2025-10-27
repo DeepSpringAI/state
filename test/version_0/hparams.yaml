@@ -1,0 +1,125 @@
+input_dim: 11
+hidden_dim: 328
+output_dim: 11
+pert_dim: 5
+batch_dim: 1
+dropout: 0.1
+lr: 0.0001
+loss_fn: mse
+control_pert: TARGET1
+embed_key: X_hvg
+output_space: all
+gene_names:
+- GENE1
+- GENE2
+- GENE3
+- GENE4
+- GENE5
+- GENE6
+- GENE7
+- GENE8
+- GENE9
+- GENE10
+- GENE11
+- GENE12
+- GENE13
+- GENE14
+- GENE15
+- GENE16
+- GENE17
+- GENE18
+- GENE19
+- GENE20
+- GENE21
+- GENE22
+- GENE23
+- GENE24
+- GENE25
+- GENE26
+- GENE27
+- GENE28
+- GENE29
+- GENE30
+- GENE31
+- GENE32
+- GENE33
+- GENE34
+- GENE35
+- GENE36
+- GENE37
+- GENE38
+- GENE39
+- GENE40
+- GENE41
+- GENE42
+- GENE43
+- GENE44
+- GENE45
+- GENE46
+- GENE47
+- GENE48
+- GENE49
+- GENE50
+batch_size: 8
+gene_dim: 50
+hvg_dim: 11
+decoder_cfg:
+  latent_dim: 11
+  gene_dim: 50
+  hidden_dims:
+  - 1024
+  - 1024
+  - 512
+  dropout: 0.1
+  residual_decoder: false
+cell_set_len: 64
+extra_tokens: 1
+decoder_hidden_dims:
+- 1024
+- 1024
+- 512
+blur: 0.05
+loss: energy
+confidence_token: false
+n_encoder_layers: 4
+n_decoder_layers: 4
+freeze_pert_backbone: false
+finetune_vci_decoder: false
+residual_decoder: false
+batch_encoder: false
+nb_decoder: false
+decoder_loss_weight: 1.0
+use_basal_projection: false
+mask_attn: false
+regularization: 0.0
+init_from: null
+wandb_track: true
+weight_decay: 0.0005
+max_steps: 40000
+train_seed: 42
+val_freq: 100
+ckpt_every_n_steps: 100
+gradient_clip_val: 10
+devices: 1
+strategy: auto
+use_mfu: true
+mfu_kwargs:
+  available_flops: 60000000000000.0
+  use_backward: true
+  logging_interval: 10
+  window_size: 2
+cumulative_flops_use_backward: true
+predict_residual: true
+distributional_loss: energy
+transformer_backbone_key: GPT2
+transformer_backbone_kwargs:
+  max_position_embeddings: 64
+  n_positions: 64
+  hidden_size: 328
+  n_embd: 328
+  n_layer: 8
+  n_head: 8
+  resid_pdrop: 0.0
+  embd_pdrop: 0.0
+  attn_pdrop: 0.0
+  use_cache: false

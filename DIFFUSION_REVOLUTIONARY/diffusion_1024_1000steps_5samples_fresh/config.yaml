@@ -27,13 +27,13 @@ model:
   checkpoint: null
   device: cuda
   kwargs:
-    cell_set_len: 128
+    cell_set_len: 256
     blur: 0.05
-    hidden_dim: 672
+    hidden_dim: 1024
     loss: energy
     confidence_head: false
-    n_encoder_layers: 4
-    n_decoder_layers: 4
+    n_encoder_layers: 6
+    n_decoder_layers: 6
     predict_residual: true
     softplus: true
     freeze_pert_backbone: false
@@ -44,19 +44,17 @@ model:
     nb_decoder: false
     mask_attn: false
     use_effect_gating_token: false
-    use_basal_projection: false
     distributional_loss: energy
-    gene_decoder_bool: false
     init_from: null
     transformer_backbone_key: llama
     transformer_backbone_kwargs:
-      max_position_embeddings: 128
-      hidden_size: 672
-      intermediate_size: 2688
-      num_hidden_layers: 4
-      num_attention_heads: 8
-      num_key_value_heads: 8
-      head_dim: 84
+      max_position_embeddings: 256
+      hidden_size: 1024
+      intermediate_size: 2784
+      num_hidden_layers: 8
+      num_attention_heads: 12
+      num_key_value_heads: 12
+      head_dim: 58
       use_cache: false
       attention_dropout: 0.0
       hidden_dropout: 0.0
@@ -68,24 +66,24 @@ model:
       rotary_dim: 0
       use_rotary_embeddings: false
     lora:
-      enable: false
-      r: 16
-      alpha: 32
-      dropout: 0.05
+      enable: true
+      r: 32
+      alpha: 64
+      dropout: 0.1
       bias: none
       target: auto
-      adapt_mlp: false
+      adapt_mlp: true
       task_type: FEATURE_EXTRACTION
       merge_on_eval: false
 training:
   wandb_track: true
   weight_decay: 0.0005
-  batch_size: 16
+  batch_size: 64
   lr: 0.0001
-  max_steps: 40000
+  max_steps: 30000
   train_seed: 42
-  val_freq: 2000
-  ckpt_every_n_steps: 20000
+  val_freq: 200
+  ckpt_every_n_steps: 5000
   gradient_clip_val: 10
   loss_fn: mse
   devices: 1
@@ -99,12 +97,12 @@ training:
   cumulative_flops_use_backward: true
 wandb:
   entity: arcinstitute
-  project: vcc
+  project: diffusion_revolutionary
   local_wandb_dir: ./wandb_logs
   tags:
-  - first_run
-name: first_run
-output_dir: competition
+  - DIFFUSION_REVOLUTIONARY
+name: diffusion_1024_1000steps_5samples_fresh
+output_dir: DIFFUSION_REVOLUTIONARY
 use_wandb: true
 overwrite: false
 return_adatas: false

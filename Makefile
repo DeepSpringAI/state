@@ -55,25 +55,24 @@ setup:
 	@echo "[INFO] Installing CUDA-compatible PyTorch"
 	uv pip install torch==2.4.1+cu121 torchvision==0.19.1+cu121 torchaudio==2.4.1+cu121 --index-url https://download.pytorch.org/whl/cu121 --index-strategy unsafe-best-match
 
-<<<<<<< HEAD
-setup-cpu:
-	@if ! command -v uv >/dev/null 2>&1; then \
-	  echo "[INFO] uv not found, installing via pip"; \
-	  pip install uv; \
-	else \
-	  echo "[INFO] uv is already installed"; \
-	fi
-	@echo "[INFO] Creating virtual environment and installing dependencies"
-	uv venv --clear
-	@echo "[INFO] Installing this repo in development mode"
-	uv pip install -e . --index-strategy unsafe-best-match
-	@echo "[INFO] Installing CPU-only PyTorch"
-	uv pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match
-=======
-	@echo "[INFO] Installing tqdm via uv"
-	uv pip install tqdm
+# setup-cpu:
+# 	@if ! command -v uv >/dev/null 2>&1; then \
+# 	  echo "[INFO] uv not found, installing via pip"; \
+# 	  pip install uv; \
+# 	else \
+# 	  echo "[INFO] uv is already installed"; \
+# 	fi
+# 	@echo "[INFO] Creating virtual environment and installing dependencies"
+# 	uv venv --clear
+# 	@echo "[INFO] Installing this repo in development mode"
+# 	uv pip install -e . --index-strategy unsafe-best-match
+# 	@echo "[INFO] Installing CPU-only PyTorch"
+# 	uv pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match
+# =======
+# 	@echo "[INFO] Installing tqdm via uv"
+# 	uv pip install tqdm
 
->>>>>>> 10cba40 (data_update)
+# >>>>>>> 10cba40 (data_update)
 
 clean:
 	rm -rf .venv __pycache__ .pytest_cache .ruff_cache
